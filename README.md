@@ -1,23 +1,24 @@
-# AI for Developer Productivity: Technical Writer Agent
+# Polish Medicine Registry Q&A
 
 ## Overview
-In this project, we developed a **Technical Writer Agent** to enhance developer productivity. The core functionality of our agent leverages Retrieval-Augmented Generation (RAG) to dynamically update and refine technical documentation. This innovative approach not only streamlines the documentation process but also ensures that it remains accurate, up-to-date, and contextually relevant.
 
-## Now It's Your Turn!
-Embrace your creativity and personalize this project to craft a solution that uniquely addresses the challenges and inefficiencies you face in your own environment. After seeing what our Technical Writer Agent can do, it’s time for you to take the reins. Use the foundation we’ve built and apply it to a challenge you face in your own professional or personal environment. Here’s how you can get started:
+To change the topic from my day to day work I wanted to implement a system in which doctor's could ask questions and get answers from a database of medicine registered in Poland.
 
-### Minimum Requirements
-1. **RAG Integration:** Successfully integrate Retrieval-Augmented Generation (RAG) to enable your agent to access and utilize external information when generating responses.
-2. **Vector Database Implementation:** Create and implement a vector data store capable of embedding and retrieving documents, ensuring that the system can access necessary information efficiently.
+I used Langchain and OpenAI to implement this system. The first idea was to use the whole registry. But it was not possible to use the whole registry because it was too big. There are more than 13000 PDFs with multiple files each. The partial implementation can be found in the files:
 
-### Stretch Goals
-1. **Enhanced UI/UX:** Develop a more advanced and user-friendly interface that includes features such as real-time suggestions, auto-completion of content, and a more interactive documentation process.
-2. **Automated Content Updates:** Implement a feature where the agent periodically checks and updates existing documentation based on new information or changes in the relevant field, ensuring that all documentation remains current without manual intervention.
-3. **Integration with Existing Tools:** Develop integrations for the agent with commonly used development tools and platforms (e.g., Confluence, Jira, Notion) to streamline workflows and increase accessibility.
-4. **Add The Features You Want**: Let your creativity shine by adding a unique feature that significantly simplifies or enhances your daily routines. Innovate with functionalities that solve problems and improve efficiency or satisfaction in meaningful ways.
+ - dataloader.py - this file contains the code to load the data and download the PDFs with each product charasteristic.
+ - embeddings.py - this file contains the code to create the embeddings for the data, the idea was to cache the embeddings on each for future use. 
+ - vectorstore.py - this file contains the code to create the vector store.
 
-## Privacy and Submission Guidelines
-- **Submission Requirements:** Please submit a link to your public repo with your implementation or a loom video showcasing your work on the [BloomTech AI Platform](app.bloomtech.com). 
-- **Sensitive Information:** If your implementation involves sensitive information, you are not required to submit a public repository. Instead, a detailed review of your project through a Loom video is acceptable, where you can demonstrate the functionality and discuss the technologies used without exposing confidential data.
+ The limited scope included anticoagulant medicines, used to help patients with blood clotting problems. The system is not perfect, but it is a good example of how you can use Langchain to implement a system in which doctor's could ask questions and get answers from a database of medicine registered in Poland. 
 
----
+ I used additional layer for caching embedding using `CacheBackedEmbeddings` to reduce the cost and improve startup time and `ChromaDB`. The UI is implemented using `Gradio`.
+
+ To run the system install the requirements, set OPENAI_API_KEY and run the app.py file.
+
+ ```bash
+ pip install -r requirements.txt
+ export OPENAI_API_KEY="your_openai_api_key"
+ python app.py
+ ```
+
