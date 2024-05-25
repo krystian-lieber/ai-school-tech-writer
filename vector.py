@@ -1,7 +1,8 @@
 import os
 import pickle
+import time
+import uuid
 from dotenv import load_dotenv
-import pinecone
 from langchain_community.vectorstores import Pinecone
 from langchain_openai import OpenAIEmbeddings
 from tqdm import tqdm
@@ -19,24 +20,27 @@ index_name = "rpl"
 index = pc.Index(index_name)
 
 # Initialize the embeddings model
-embeddings = OpenAIEmbeddings(model='text-embedding-3-large')
+embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 
 # Directory containing the characteristic embeddings
 characteristics_directory = os.getenv("DATA_DIR", "data") + "/characteristics"
 
 # Read all the .pkl files and add them to the PineconeVectorStore
-file_list = [f for f in os.listdir(characteristics_directory) if f.endswith('.embeddings.pkl')]
+file_list = [
+    f for f in os.listdir(characteristics_directory) if f.endswith(".embeddings.pkl")
+]
 
 for file_name in tqdm(file_list, desc="Processing files"):
     file_path = os.path.join(characteristics_directory, file_name)
-    with open(file_path, 'rb') as f:
+    with open(file_path, "rb") as f:
         embedded_texts = pickle.load(f)
         vectors = []
+        documents = []
         for doc, embedding in zip(documents, embeddings):
             vector = {
-                'id': str(uuid.uuid4()),
-                'values': embedding,
-                'metadata': {'title': doc['title']}
+                "id": str(uuid.uuid4()),
+                "values": embedding,
+                "metadata": {"title": doc["title"]},
             }
             vectors.append(vector)
             if len(vectors) >= 100:  # Batch size limit
